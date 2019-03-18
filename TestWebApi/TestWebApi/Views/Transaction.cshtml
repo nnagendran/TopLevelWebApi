@@ -1,0 +1,76 @@
+﻿
+@{
+    ViewBag.Title = "Transaction";
+}
+
+<h2>Transaction</h2>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script lang="ja" type="text/javascript">
+    function AllTransactions() {
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:17758/api/Transaction", //URI
+
+            dataType: "json",
+            success: function (data) {
+                debugger;
+                var datadatavalue = data;
+                var myJsonObject = datavalue;
+                contentType: "application/json";
+                $.each(myJsonObject, function (i, mobj) {
+                    $("#Transtbl").append('<tr><td width="50px">' + mobj.ApplicationId +
+                     '</td><td width="50px">' + mobj.Type +
+                    '</td><td width="50px">' + mobj.Summary +
+                    '</td>' + '</td><td width="50px">'
+                    + mobj.Amount + '</td></tr>');
+
+                });
+
+            },
+            error: function (xhr) {
+                alert(xhr.responseText);
+            }
+        });
+
+    }
+
+    function PostData() {
+        var transactionDetails =
+       {
+           ApplicationId: 101,
+           Type: "Debit",
+           Summary: "Payment",
+           Amount: 50,
+           PostingDate: Date.now(),
+           IsCleared: true,
+           ClearedDate: Date.now(),
+
+       };
+
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify(transactionDetails),
+            url: "http://localhost:17758/api/Transaction",
+            dataType: "json",
+            contentType: "application/json",
+        });
+
+    }
+</script>
+
+@using (Html.BeginForm())
+{
+    <div style="text-align:center">
+       
+        <table border="1" width="70%" style="color:chocolate" id="Transtbl">
+            <tr>
+                <td>
+                    <input id="btnget" type="button" onclick="AllTransactions();" value="Get_Data" />
+                    <input id="btngetbyid" type="button" onclick="GetTransactionById();" value="Get_BYID" />
+                    <input id="btnget" type="button" onclick="PostData();" value="Post_Data" />
+                    
+                </td>
+            </tr>
+        </table>
+    </div>
+}
